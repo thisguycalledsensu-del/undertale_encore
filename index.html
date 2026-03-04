@@ -2,164 +2,200 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<title>Inicio Sesión Retro XP con CRT</title>
+<title>Inicio Sesión Retro Consola CMD con CRT</title>
 <style>
-  /* Fondo y diseño general */
+  /* Estilos generales: fondo negro, verde consola, pixelado */
   body {
-    margin:0; padding:0;
-    background: linear-gradient(to bottom, #316AC5 0%, #7FA9EB 100%);
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
+    margin: 0; padding: 0;
+    background: #001100;
+    font-family: 'Courier New', Courier, monospace;
+    color: #33FF33;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
     overflow: hidden;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: pixelated;
   }
 
-  /* Contenedor principal */
+  /* Caja principal */
   .login-box {
-    background: #234A93;
-    width: 350px;
-    height: 500px;
-    border: 2px solid #103070;
-    box-shadow: 0 0 15px #1B356B;
+    background: #002200cc;
+    border: 2px solid #006600;
+    width: 380px;
     border-radius: 6px;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 0 20px #009900aa;
     padding: 20px;
     box-sizing: border-box;
     position: relative;
-    z-index: 1;
   }
 
-  /* Título */
+  /* Título estilo consola */
   .title {
-    text-align: center;
+    font-size: 1.6rem;
     font-weight: bold;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #22FF22;
+    text-shadow: 0 0 8px #22FF22;
+    letter-spacing: 0.12em;
   }
 
   /* Lista de usuarios */
   .users-list {
-    flex-grow: 1;
+    max-height: 400px;
     overflow-y: auto;
-    margin-bottom: 15px;
   }
 
   /* Cada usuario */
   .user-item {
-    background: #316AC5;
+    background: #003300;
+    border: 1px solid #006600;
     margin-bottom: 8px;
-    padding: 6px 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
     cursor: pointer;
-    border: 1px solid transparent;
+    user-select: none;
   }
   .user-item:hover {
-    background: #72A0F9;
-    border-color: #A2C6FF;
+    background: #005500;
+    border-color: #00AA00;
   }
+
+  .user-item-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   .user-item img {
     width: 48px;
     height: 48px;
     border-radius: 6px;
-    border: 2px solid #103070;
-    margin-right: 10px;
+    border: 1px solid #006600;
     object-fit: cover;
+    filter: drop-shadow(0 0 3px #33FF33);
+    image-rendering: pixelated;
   }
+
   .user-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #33FF33;
+    text-shadow: 0 0 5px #22CC22;
   }
-  .user-actions button {
-    background: #72A0F9;
-    border: 1px solid #A2C6FF;
-    color: white;
-    font-size: 0.9rem;
-    padding: 2px 5px;
-    border-radius: 4px;
+
+  /* Botones pequeños encima derecha */
+  .user-controls {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+  }
+  .user-controls button {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    padding: 4px 7px;
+    border-radius: 3px;
+    border: 1px solid #00AA00;
+    background: #004400;
+    color: #33FF33;
     cursor: pointer;
+    box-shadow: 0 0 5px #00FF00;
+    user-select: none;
+    transition: all 0.2s;
   }
-  .user-actions button:hover {
-    background: #A2C6FF;
-    color: #234A93;
+  .user-controls button:hover {
+    background: #22FF22;
+    color: #002200;
+    border-color: #22FF22;
+    box-shadow: 0 0 10px #22FF22;
   }
 
   /* Botones inferiores */
   .bottom-buttons {
-    border-top: 1px solid #103070;
-    padding-top: 10px;
+    margin-top: 15px;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    justify-content: space-between;
   }
-  button {
-    background: #316AC5;
-    border: 1px solid #103070;
-    color: white;
+  .bottom-buttons button {
+    font-family: 'Courier New', monospace;
+    background: #003300;
+    border: 1px solid #006600;
+    color: #33FF33;
     font-weight: bold;
-    font-size: 1rem;
-    padding: 8px 0;
-    border-radius: 4px;
+    font-size: 1.1rem;
+    padding: 10px 10px;
+    border-radius: 5px;
     cursor: pointer;
+    box-shadow: 0 0 8px #00FF00;
+    transition: all 0.3s;
   }
-  button:hover {
-    background: #72A0F9;
-    border-color: #A2C6FF;
+  .bottom-buttons button:hover {
+    background: #00FF00;
+    color: #001100;
+    border-color: #00FF00;
+    box-shadow: 0 0 20px #00FF00;
   }
 
-  /* Modal para registro */
+  /* Modal editar cuenta */
   .modal-bg {
+    display: none;
     position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.7);
-    display:none;
+    inset: 0;
+    background: rgba(0,25,0,0.9);
+    backdrop-filter: blur(4px);
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 100;
   }
   .modal {
-    background: #234A93;
-    border-radius: 6px;
+    background: #002200cc;
     padding: 20px;
+    border-radius: 6px;
     width: 320px;
-    color: white;
-    box-shadow: 0 0 20px #1B356B;
+    box-shadow: 0 0 10px #00FF00;
+    color: #33FF33;
+    font-family: 'Courier New', monospace;
   }
   .modal h2 {
-    margin-top:0;
+    font-weight: bold;
+    color: #00FF00;
+    margin-top: 0;
     margin-bottom: 15px;
-  }
-  .modal input {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #103070;
-    background: #316AC5;
-    color: white;
-    font-size: 1rem;
-  }
-  .modal input::placeholder {
-    color: #c9d1ffcc;
+    text-shadow: 0 0 8px #00FF00;
   }
   .modal label {
-    display: block;
     margin-bottom: 6px;
+    display: block;
+  }
+  .modal input[type="text"],
+  .modal input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    background: #003300;
+    color: #33FF33;
+    border: 1px solid #004400;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    box-shadow: inset 0 0 6px #00FF00;
+  }
+  .modal input::placeholder {
+    color: #33FF3366;
   }
   .modal .img-preview {
     width: 80px;
     height: 80px;
-    border-radius: 8px;
-    border: 2px solid #103070;
-    margin-bottom: 10px;
     object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #004400;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 5px #00FF00);
+    image-rendering: pixelated;
   }
   .modal-buttons {
     display: flex;
@@ -167,20 +203,110 @@
   }
   .modal button {
     width: 48%;
+    background: #004400;
+    border: 1px solid #00FF00;
+    color: #33FF33;
+    font-weight: bold;
+    box-shadow: 0 0 10px #00FF00;
+    cursor: pointer;
+    transition: all 0.3s;
   }
-  /* Scrollbar para lista usuarios */
+  .modal button:hover {
+    background: #00FF00;
+    color: #001100;
+  }
+
+  /* Pantalla ingreso contraseña estilo Vista */
+  .login-password-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .login-password-screen.active {
+    display: flex;
+  }
+  .login-password-screen img {
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
+    border: 1px solid #006600;
+    object-fit: cover;
+    filter: drop-shadow(0 0 8px #33FF33);
+    image-rendering: pixelated;
+  }
+  .login-password-screen .user-name {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #00FF00;
+    text-shadow: 0 0 10px #00FF00;
+    letter-spacing: 0.1em;
+  }
+  .login-password-screen .error-message {
+    color: #ff4c4c;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ff0000;
+    min-height: 20px;
+  }
+  .login-password-screen input[type="password"] {
+    width: 280px;
+    padding: 12px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    border: 2px solid #006600;
+    background: #003300;
+    color: #33FF33;
+    font-family: 'Courier New', monospace;
+    box-shadow: inset 0 0 10px #00FF00;
+    text-align: center;
+    image-rendering: pixelated;
+  }
+  .login-password-screen input::placeholder {
+    color: #33FF3366;
+  }
+  .login-password-screen button {
+    width: 280px;
+    padding: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    background: #003300;
+    border: 1px solid #006600;
+    color: #33FF33;
+    box-shadow: 0 0 10px #00FF00;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  .login-password-screen button:hover {
+    background: #00FF00;
+    color: #001100;
+    border-color: #00FF00;
+    box-shadow: 0 0 25px #00FF00;
+  }
+  .login-password-screen .btn-back {
+    margin-top: 6px;
+    background: #002200;
+    border: 1px solid #004400;
+  }
+  .login-password-screen .btn-back:hover {
+    background: #004400;
+    color: #00FF00;
+  }
+
+  /* Scrollbar verde */
   .users-list::-webkit-scrollbar {
     width: 6px;
   }
   .users-list::-webkit-scrollbar-thumb {
-    background: #103070;
+    background: #004400;
     border-radius: 3px;
+    box-shadow: inset 0 0 5px #00FF00;
   }
 
-  /* -------------------- */
-  /* FILTRO CRT */
+  /* ----------- CRT FILTER ----------- */
 
-  /* Overlay líneas horizontales (scanlines) */
+  /* Líneas horizontales */
   .crt-overlay {
     pointer-events:none;
     position: fixed;
@@ -196,7 +322,6 @@
     animation: flicker 0.15s infinite alternate;
   }
 
-  /* Pequeño ruido/scan flicker */
   @keyframes flicker {
     0% {
       opacity: 0.06;
@@ -210,7 +335,7 @@
     }
   }
 
-  /* Brillo fantasmal ligero */
+  /* Brillo fantasmal */
   .crt-glow {
     pointer-events:none;
     position: fixed;
@@ -228,50 +353,55 @@
     100% {opacity: 0.25;}
   }
 
-  /* Curvatura tipo CRT (opcional, sutil) */
+  /* Curvatura CRT sutil */
   body::before {
     content: "";
     pointer-events:none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     border-radius: 15px;
-    box-shadow: inset 0 0 40px 20px rgba(0,255,0,0.1);
+    box-shadow: inset 0 0 40px 20px rgba(0,255,0,0.15);
     mix-blend-mode: screen;
     z-index: 999;
   }
-
 </style>
 </head>
 <body>
 
 <div class="login-box">
-  <div class="title">Seleccione un usuario para iniciar sesión</div>
+
+  <div class="title" id="title">Seleccione un usuario para iniciar sesión</div>
+
   <div class="users-list" id="usersList"></div>
+
   <div class="bottom-buttons">
     <button id="btnAddAccount">Añadir cuenta</button>
-    <button id="btnAddExisting">Añadir cuenta existente</button>
     <button id="btnGuest">Entrar como Invitado</button>
+  </div>
+
+  <!-- Pantalla ingreso contraseña -->
+  <div class="login-password-screen" id="loginPasswordScreen">
+    <img id="loginUserImage" alt="Foto usuario" />
+    <div class="user-name" id="loginUserName"></div>
+    <div class="error-message" id="loginErrorMessage"></div>
+    <input type="password" id="loginPasswordInput" placeholder="Contraseña" autocomplete="off" />
+    <button id="btnLoginConfirm">Ingresar</button>
+    <button id="btnBackToUsers" class="btn-back">Volver</button>
   </div>
 </div>
 
-<!-- Modal Registro -->
+<!-- Modal editar cuenta -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
-    <h2>Crear Nueva Cuenta</h2>
-    <label for="inputEmail">Gmail</label>
-    <input type="email" id="inputEmail" placeholder="usuario@gmail.com" />
+    <h2>Editar Cuenta</h2>
     <label for="inputName">Nombre</label>
     <input type="text" id="inputName" placeholder="Nombre para mostrar" />
     <label for="inputImage">Imagen de perfil</label>
     <input type="file" id="inputImage" accept="image/*" />
     <img src="" alt="Previsualización" class="img-preview" id="imgPreview" style="display:none" />
-    <label for="inputPass">Contraseña</label>
-    <input type="password" id="inputPass" placeholder="Contraseña" />
-    <label for="inputConfirmPass">Confirmar contraseña</label>
-    <input type="password" id="inputConfirmPass" placeholder="Confirmar contraseña" />
     <div class="modal-buttons">
-      <button id="btnCreate">Crear</button>
-      <button id="btnCancel">Cancelar</button>
+      <button id="btnSaveEdit">Guardar</button>
+      <button id="btnCancelEdit">Cancelar</button>
     </div>
   </div>
 </div>
@@ -280,227 +410,228 @@
 <div class="crt-overlay"></div>
 <div class="crt-glow"></div>
 
+<audio id="errorSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
 <script>
-let accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+  let accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
 
-const usersList = document.getElementById("usersList");
-const btnAddAccount = document.getElementById("btnAddAccount");
-const btnAddExisting = document.getElementById("btnAddExisting");
-const btnGuest = document.getElementById("btnGuest");
-const modalBg = document.getElementById("modalBg");
-const inputEmail = document.getElementById("inputEmail");
-const inputName = document.getElementById("inputName");
-const inputImage = document.getElementById("inputImage");
-const imgPreview = document.getElementById("imgPreview");
-const inputPass = document.getElementById("inputPass");
-const inputConfirmPass = document.getElementById("inputConfirmPass");
-const btnCreate = document.getElementById("btnCreate");
-const btnCancel = document.getElementById("btnCancel");
+  const usersList = document.getElementById("usersList");
+  const btnAddAccount = document.getElementById("btnAddAccount");
+  const btnGuest = document.getElementById("btnGuest");
+  const title = document.getElementById("title");
 
-function renderUsers(){
-  usersList.innerHTML = "";
-  accounts.forEach((acc, i) => {
-    const div = document.createElement("div");
-    div.className = "user-item";
-    div.innerHTML = `
-      <img src="${acc.image}" alt="Foto de ${acc.name}" />
-      <div class="user-name">${acc.name}</div>
-      <div class="user-actions" style="margin-left:auto; display:flex; gap:4px;">
-        <button class="edit-btn">✏️</button>
-        <button class="remove-btn">❌</button>
-      </div>
-    `;
+  const loginPasswordScreen = document.getElementById("loginPasswordScreen");
+  const loginUserImage = document.getElementById("loginUserImage");
+  const loginUserName = document.getElementById("loginUserName");
+  const loginPasswordInput = document.getElementById("loginPasswordInput");
+  const loginErrorMessage = document.getElementById("loginErrorMessage");
+  const btnLoginConfirm = document.getElementById("btnLoginConfirm");
+  const btnBackToUsers = document.getElementById("btnBackToUsers");
+  const errorSound = document.getElementById("errorSound");
 
-    // Login al hacer click
-    div.querySelector(".user-name").parentNode.onclick = (e) => {
-      if(e.target.tagName !== 'BUTTON') login(i);
-    };
+  const modalBg = document.getElementById("modalBg");
+  const inputName = document.getElementById("inputName");
+  const inputImage = document.getElementById("inputImage");
+  const imgPreview = document.getElementById("imgPreview");
+  const btnSaveEdit = document.getElementById("btnSaveEdit");
+  const btnCancelEdit = document.getElementById("btnCancelEdit");
 
-    // Editar usuario
-    div.querySelector(".edit-btn").onclick = (e) => {
-      e.stopPropagation();
-      editUser(i);
-    };
+  let selectedUserIndex = null;
 
-    // Quitar usuario de la pantalla
-    div.querySelector(".remove-btn").onclick = (e) => {
-      e.stopPropagation();
-      removeUser(i);
-    };
+  function renderUsers() {
+    usersList.innerHTML = "";
+    accounts.forEach((acc, i) => {
+      const div = document.createElement("div");
+      div.className = "user-item";
 
-    usersList.appendChild(div);
-  });
+      div.innerHTML = `
+        <div class="user-item-flex">
+          <img src="${acc.image}" alt="Foto de ${acc.name}" />
+          <div class="user-name">${acc.name}</div>
+          <div class="user-controls">
+            <button class="btn-remove-screen" title="Quitar usuario">🗑️</button>
+            <button class="btn-edit" title="Editar usuario">✏️</button>
+          </div>
+        </div>
+      `;
 
-  btnAddAccount.style.display = accounts.length >= 3 ? "none" : "block";
-}
+      // Click para abrir pantalla ingreso contraseña
+      div.querySelector(".user-name").parentNode.onclick = (e) => {
+        if (e.target.tagName !== "BUTTON") {
+          openLoginScreen(i);
+        }
+      };
 
-// ---------- MODAL CREAR CUENTA ----------
-let createAccountHandler = () => {
-  const gmail = inputEmail.value.trim().toLowerCase();
-  const name = inputName.value.trim();
-  const pass = inputPass.value;
-  const confirmPass = inputConfirmPass.value;
-  const imageSrc = imgPreview.src;
+      // Quitar de la pantalla (solo quita, no elimina)
+      div.querySelector(".btn-remove-screen").onclick = (e) => {
+        e.stopPropagation();
+        accounts.splice(i, 1);
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+        renderUsers();
+        alert(`Cuenta de ${acc.name} retirada de la pantalla. Puedes añadir otra.`);
+      };
 
-  if(!gmail || !name || !pass || !confirmPass){
-    alert("Completa todos los campos.");
-    return;
+      // Editar usuario (pide contraseña para confirmar)
+      div.querySelector(".btn-edit").onclick = (e) => {
+        e.stopPropagation();
+        const password = prompt(`Introduce la contraseña de ${acc.name} para editar:`);
+        if (password !== acc.pass) {
+          alert("Contraseña incorrecta.");
+          return;
+        }
+        inputName.value = acc.name;
+        imgPreview.src = acc.image;
+        imgPreview.style.display = "block";
+        modalBg.style.display = "flex";
+        selectedUserIndex = i;
+      };
+
+      usersList.appendChild(div);
+    });
+
+    btnAddAccount.style.display = accounts.length >= 3 ? "none" : "inline-block";
   }
 
-  if(!validateEmail(gmail)){
-    alert("Email no válido.");
-    return;
+  function openLoginScreen(index) {
+    selectedUserIndex = index;
+    const acc = accounts[index];
+    loginUserImage.src = acc.image;
+    loginUserName.textContent = acc.name;
+    loginPasswordInput.value = "";
+    loginErrorMessage.textContent = "";
+    loginPasswordInput.focus();
+
+    title.style.display = "none";
+    usersList.style.display = "none";
+    btnAddAccount.style.display = "none";
+    btnGuest.style.display = "none";
+
+    loginPasswordScreen.classList.add("active");
   }
 
-  if(pass !== confirmPass){
-    alert("Las contraseñas no coinciden.");
-    return;
-  }
+  btnLoginConfirm.onclick = () => {
+    if (selectedUserIndex === null) return;
 
-  if(accounts.some(a => a.gmail === gmail)){
-    alert("Ese Gmail ya está registrado.");
-    return;
-  }
+    const inputPass = loginPasswordInput.value.trim();
+    if (inputPass === accounts[selectedUserIndex].pass) {
+      alert(`Bienvenido ${accounts[selectedUserIndex].name}!`);
+      // Aquí podrías continuar sesión o redirigir
+    } else {
+      loginErrorMessage.textContent = "Contraseña incorrecta.";
+      errorSound.play();
+      loginPasswordInput.value = "";
+      loginPasswordInput.focus();
+    }
+  };
 
-  if(accounts.length >= 3){
-    alert("Solo se permiten 3 cuentas.");
-    return;
-  }
+  btnBackToUsers.onclick = () => {
+    loginPasswordScreen.classList.remove("active");
+    title.style.display = "block";
+    usersList.style.display = "block";
+    btnAddAccount.style.display = accounts.length >= 3 ? "none" : "inline-block";
+    btnGuest.style.display = "inline-block";
+    loginErrorMessage.textContent = "";
+    loginPasswordInput.value = "";
+    selectedUserIndex = null;
+  };
 
-  if(!imageSrc || imageSrc === ""){
-    alert("Selecciona una imagen de perfil.");
-    return;
-  }
+  // Modal editar cuenta - manejar imagen
+  inputImage.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        imgPreview.src = ev.target.result;
+        imgPreview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      imgPreview.style.display = "none";
+      imgPreview.src = "";
+    }
+  };
 
-  accounts.push({ gmail, name, pass, image: imageSrc });
-  localStorage.setItem("accounts", JSON.stringify(accounts));
-  modalBg.style.display = "none";
-  renderUsers();
-  resetModal();
-};
+  btnSaveEdit.onclick = () => {
+    if (selectedUserIndex === null) return;
 
-btnCreate.onclick = createAccountHandler;
+    const newName = inputName.value.trim();
+    const newImage = imgPreview.src;
 
-btnAddAccount.onclick = () => {
-  resetModal();
-  modalBg.style.display = "flex";
-};
-
-btnCancel.onclick = () => {
-  modalBg.style.display = "none";
-};
-
-// Cambiar imagen
-inputImage.onchange = (e) => {
-  const file = e.target.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      imgPreview.src = ev.target.result;
-      imgPreview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  } else {
-    imgPreview.style.display = "none";
-    imgPreview.src = "";
-  }
-};
-
-// ---------- FUNCIONES UTILES ----------
-function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function login(index){
-  const pass = prompt(`Contraseña para ${accounts[index].name}:`);
-  if(pass === null) return;
-  if(pass === accounts[index].pass){
-    alert(`Bienvenido ${accounts[index].name}!`);
-  } else {
-    alert("Contraseña incorrecta.");
-  }
-}
-
-btnGuest.onclick = () => {
-  alert("Entrando como Invitado...");
-};
-
-// ---------- NUEVAS FUNCIONES ----------
-function editUser(index){
-  const acc = accounts[index];
-  inputEmail.value = acc.gmail; // no editable
-  inputEmail.disabled = true;
-  inputName.value = acc.name;
-  imgPreview.src = acc.image;
-  imgPreview.style.display = "block";
-  modalBg.style.display = "flex";
-
-  btnCreate.onclick = () => {
-    const name = inputName.value.trim();
-    const imageSrc = imgPreview.src;
-
-    if(!name){
+    if (!newName) {
       alert("El nombre no puede estar vacío.");
       return;
     }
-
-    if(!imageSrc || imageSrc === ""){
+    if (!newImage) {
       alert("Selecciona una imagen de perfil.");
       return;
     }
 
-    accounts[index].name = name;
-    accounts[index].image = imageSrc;
+    accounts[selectedUserIndex].name = newName;
+    accounts[selectedUserIndex].image = newImage;
+
     localStorage.setItem("accounts", JSON.stringify(accounts));
     modalBg.style.display = "none";
-    inputEmail.disabled = false;
     renderUsers();
-    resetModal();
   };
-}
 
-function removeUser(index){
-  const removed = accounts.splice(index, 1)[0];
-  localStorage.setItem("accounts", JSON.stringify(accounts));
-  renderUsers();
-  alert(`Cuenta de ${removed.name} removida de la pantalla.`);
-}
+  btnCancelEdit.onclick = () => {
+    modalBg.style.display = "none";
+  };
 
-// Añadir cuenta existente
-btnAddExisting.onclick = () => {
-  const gmail = prompt("Introduce el Gmail de la cuenta existente:");
-  if(!gmail) return;
+  // Añadir cuenta nueva (solo pido email, nombre, pass y una imagen predeterminada)
+  btnAddAccount.onclick = () => {
+    if (accounts.length >= 3) {
+      alert("Solo se permiten 3 cuentas visibles.");
+      return;
+    }
+    const gmail = prompt("Introduce Gmail para nueva cuenta:");
+    if (!gmail || !validateEmail(gmail)) {
+      alert("Email no válido.");
+      return;
+    }
+    if (accounts.some((a) => a.gmail === gmail.toLowerCase())) {
+      alert("Ese Gmail ya está registrado.");
+      return;
+    }
+    const pass = prompt("Introduce contraseña para la cuenta:");
+    if (!pass) {
+      alert("Contraseña no puede estar vacía.");
+      return;
+    }
+    const confirmPass = prompt("Confirma la contraseña:");
+    if (pass !== confirmPass) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+    const name = prompt("Introduce el nombre para mostrar:");
+    if (!name) {
+      alert("El nombre no puede estar vacío.");
+      return;
+    }
 
-  const allAccounts = JSON.parse(localStorage.getItem("accounts") || "[]");
-  const account = allAccounts.find(a => a.gmail === gmail.toLowerCase());
-  if(!account){
-    alert("No existe una cuenta con ese Gmail.");
-    return;
+    // Imagen predeterminada pixel verde (puedes cambiar esta URL)
+    const defaultImage = "https://i.imgur.com/0NvjkmK.png";
+
+    accounts.push({
+      gmail: gmail.toLowerCase(),
+      name,
+      pass,
+      image: defaultImage,
+    });
+
+    localStorage.setItem("accounts", JSON.stringify(accounts));
+    renderUsers();
+  };
+
+  btnGuest.onclick = () => {
+    alert("Entrando como Invitado...");
+  };
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  if(accounts.some(a => a.gmail === account.gmail)){
-    alert("La cuenta ya está en la lista.");
-    return;
-  }
-
-  accounts.push(account);
-  localStorage.setItem("accounts", JSON.stringify(accounts));
   renderUsers();
-};
-
-// Reset modal
-function resetModal(){
-  inputEmail.value = "";
-  inputEmail.disabled = false;
-  inputName.value = "";
-  inputImage.value = "";
-  imgPreview.style.display = "none";
-  inputPass.value = "";
-  inputConfirmPass.value = "";
-  btnCreate.onclick = createAccountHandler;
-}
-
-renderUsers();
 </script>
 
 </body>
