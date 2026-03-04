@@ -1,352 +1,206 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Inicio Sesión Retro Consola CMD</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Retro</title>
+
+<!-- Fuente pixel estilo Undertale -->
+<link href="https://fonts.cdnfonts.com/css/determination-mono" rel="stylesheet">
+
 <style>
-  /* Estilos generales: fondo negro, letras verdes, pixelado */
-  body {
-    margin: 0; padding: 0;
-    background: #000000;
-    font-family: 'Courier New', Courier, monospace;
-    color: #00FF00;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: grayscale;
-    image-rendering: pixelated;
-  }
-
-  /* Caja principal */
-  .login-box {
-    background: #000000cc;
-    border: 2px solid #FFFFFF;
-    width: 380px;
-    border-radius: 6px;
-    box-shadow: 0 0 15px #00FF00aa;
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative;
-  }
-
-  /* Título estilo consola */
-  .title {
-    font-size: 1.6rem;
-    font-weight: bold;
+body {
+    background: black;
+    color: #00ff99;
+    font-family: 'Determination Mono', monospace;
     text-align: center;
-    margin-bottom: 15px;
-    color: #00FF00;
-    text-shadow: 0 0 6px #00FF00;
-    letter-spacing: 0.12em;
-  }
+    margin: 0;
+}
 
-  /* Lista de usuarios */
-  .users-list {
-    max-height: 400px;
-    overflow-y: auto;
-  }
+h1 {
+    margin-top: 20px;
+    font-size: 40px;
+}
 
-  /* Cada usuario */
-  .user-item {
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    margin-bottom: 8px;
+.container {
+    margin-top: 30px;
+}
+
+.profile {
+    border: 2px solid #00ff99;
     padding: 10px;
-    border-radius: 4px;
+    margin: 10px;
+    display: inline-block;
+    width: 180px;
     cursor: pointer;
-    user-select: none;
-    image-rendering: pixelated;
-  }
-  .user-item:hover {
-    border-color: #00FF00;
-    box-shadow: 0 0 6px #00FF00;
-  }
+    transition: 0.3s;
+}
 
-  .user-item-flex {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+.profile:hover {
+    background: #003322;
+}
 
-  .user-item img {
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-    border: 1px solid #FFFFFF;
+.profile img {
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    filter: drop-shadow(0 0 3px #00FF00);
-  }
+    border: 2px solid #00ff99;
+}
 
-  .user-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #00FF00;
-    text-shadow: 0 0 5px #00FF00;
-  }
-
-  /* Botones pequeños encima derecha */
-  .user-controls {
-    margin-left: auto;
-    display: flex;
-    gap: 6px;
-  }
-  .user-controls button {
-    font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    padding: 4px 7px;
-    border-radius: 3px;
-    border: 1px solid #FFFFFF;
-    background: #000000;
-    color: #00FF00;
+button {
+    font-family: 'Determination Mono', monospace;
+    background: black;
+    color: #00ff99;
+    border: 2px solid #00ff99;
+    padding: 8px;
     cursor: pointer;
-    box-shadow: 0 0 3px #00FF00;
-    user-select: none;
-    transition: all 0.2s;
-  }
-  .user-controls button:hover {
-    background: #00FF00;
-    color: #000000;
-    border-color: #00FF00;
-    box-shadow: 0 0 8px #00FF00;
-  }
+    margin-top: 5px;
+}
 
-  /* Botón de invitado */
-  .bottom-buttons {
-    margin-top: 15px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .bottom-buttons button {
-    font-family: 'Courier New', monospace;
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    color: #00FF00;
-    font-weight: bold;
-    font-size: 1.1rem;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 0 8px #00FF00;
-    transition: all 0.3s;
-  }
-  .bottom-buttons button:hover {
-    background: #00FF00;
-    color: #000000;
-    border-color: #00FF00;
-    box-shadow: 0 0 15px #00FF00;
-  }
+button:hover {
+    background: #00ff99;
+    color: black;
+}
 
-  /* Pantalla ingreso contraseña */
-  .login-password-screen {
+input {
+    font-family: 'Determination Mono', monospace;
+    background: black;
+    color: #00ff99;
+    border: 2px solid #00ff99;
+    padding: 5px;
+    margin: 5px;
+}
+
+.form-container {
     display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-  .login-password-screen.active {
-    display: flex;
-  }
-  .login-password-screen img {
-    width: 96px;
-    height: 96px;
-    border-radius: 6px;
-    border: 2px solid #FFFFFF;
-    object-fit: cover;
-    filter: drop-shadow(0 0 5px #00FF00);
-  }
-  .login-password-screen .user-name {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #00FF00;
-    text-shadow: 0 0 8px #00FF00;
-  }
-  .login-password-screen .error-message {
-    color: #FF3333;
-    font-weight: bold;
-    min-height: 20px;
-  }
-  .login-password-screen input[type="password"] {
-    width: 280px;
-    padding: 12px;
-    font-size: 1.2rem;
-    border-radius: 4px;
-    border: 2px solid #FFFFFF;
-    background: #000000;
-    color: #00FF00;
-    font-family: 'Courier New', monospace;
-    text-align: center;
-  }
-  .login-password-screen button {
-    width: 280px;
-    padding: 10px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    color: #00FF00;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s;
-  }
-  .login-password-screen button:hover {
-    background: #00FF00;
-    color: #000000;
-    border-color: #00FF00;
-  }
+    margin-top: 20px;
+}
 
-  /* Scrollbar verde */
-  .users-list::-webkit-scrollbar {
-    width: 6px;
-  }
-  .users-list::-webkit-scrollbar-thumb {
-    background: #00FF00;
-    border-radius: 3px;
-  }
-
-  /* CRT Overlay */
-  .crt-overlay {
-    pointer-events:none;
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0,255,0,0.04) 0px,
-      rgba(0,255,0,0.04) 2px,
-      transparent 3px,
-      transparent 4px
-    );
-    z-index: 1000;
-    animation: flicker 0.15s infinite alternate;
-  }
-
-  @keyframes flicker {
-    0% { opacity: 0.06; }
-    100% { opacity: 0.12; }
-  }
-
-  .crt-glow {
-    pointer-events:none;
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: radial-gradient(circle at center, rgba(0,255,0,0.2), transparent 60%);
-    mix-blend-mode: screen;
-    filter: blur(2px);
-    z-index: 1001;
-    animation: glowPulse 2s infinite ease-in-out alternate;
-  }
-
-  @keyframes glowPulse {
-    0% {opacity: 0.1;}
-    100% {opacity: 0.25;}
-  }
-
+.hidden {
+    display: none;
+}
 </style>
 </head>
+
 <body>
 
-<div class="login-box">
+<h1>TERMINAL 1999</h1>
 
-  <div class="title" id="title">Seleccione un usuario para iniciar sesión</div>
-
-  <div class="users-list" id="usersList"></div>
-
-  <div class="bottom-buttons">
-    <button id="btnGuest">Entrar como Invitado</button>
-  </div>
-
-  <!-- Pantalla ingreso contraseña -->
-  <div class="login-password-screen" id="loginPasswordScreen">
-    <img id="loginUserImage" alt="Foto usuario" />
-    <div class="user-name" id="loginUserName"></div>
-    <div class="error-message" id="loginErrorMessage"></div>
-    <input type="password" id="loginPasswordInput" placeholder="Contraseña" autocomplete="off" />
-    <button id="btnLoginConfirm">Ingresar</button>
-    <button id="btnBackToUsers" class="btn-back">Volver</button>
-  </div>
+<div class="container" id="profiles">
 </div>
 
-<!-- CRT Overlay -->
-<div class="crt-overlay"></div>
-<div class="crt-glow"></div>
+<div id="addAccountBlock" class="profile">
+    <p>+ AÑADIR CUENTA</p>
+</div>
+
+<div class="form-container" id="registerForm">
+    <h2>CREAR CUENTA</h2>
+    <input type="text" id="username" placeholder="Usuario"><br>
+    <input type="file" id="imageInput" accept="image/*"><br>
+    <input type="password" id="password" placeholder="Contraseña"><br>
+    <input type="password" id="confirmPassword" placeholder="Confirmar contraseña"><br>
+    <button onclick="createAccount()">CREAR</button>
+</div>
 
 <script>
-  let accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
-  const usersList = document.getElementById("usersList");
-  const btnGuest = document.getElementById("btnGuest");
-  const title = document.getElementById("title");
+let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+const maxAccounts = 3;
 
-  const loginPasswordScreen = document.getElementById("loginPasswordScreen");
-  const loginUserImage = document.getElementById("loginUserImage");
-  const loginUserName = document.getElementById("loginUserName");
-  const loginPasswordInput = document.getElementById("loginPasswordInput");
-  const loginErrorMessage = document.getElementById("loginErrorMessage");
-  const btnLoginConfirm = document.getElementById("btnLoginConfirm");
-  const btnBackToUsers = document.getElementById("btnBackToUsers");
+function saveAccounts() {
+    localStorage.setItem("accounts", JSON.stringify(accounts));
+}
 
-  let selectedUserIndex = null;
+function renderProfiles() {
+    const container = document.getElementById("profiles");
+    container.innerHTML = "";
 
-  function renderUsers() {
-    usersList.innerHTML = "";
-    accounts.forEach((acc, i) => {
-      const div = document.createElement("div");
-      div.className = "user-item";
-      div.innerHTML = `
-        <div class="user-item-flex">
-          <img src="${acc.image}" alt="Foto de ${acc.name}" />
-          <div class="user-name">${acc.name}</div>
-        </div>
-      `;
-      div.querySelector(".user-name").parentNode.onclick = () => openLoginScreen(i);
-      usersList.appendChild(div);
+    // Invitado
+    const guest = document.createElement("div");
+    guest.className = "profile";
+    guest.innerHTML = "<p>INVITADO</p>";
+    guest.onclick = () => alert("Entrando como Invitado...");
+    container.appendChild(guest);
+
+    accounts.forEach((acc, index) => {
+        const div = document.createElement("div");
+        div.className = "profile";
+        div.innerHTML = `
+            <img src="${acc.image}">
+            <p>${acc.username}</p>
+            <button onclick="login(${index}); event.stopPropagation();">INGRESAR</button>
+            <button onclick="deleteAccount(${index}); event.stopPropagation();">ELIMINAR</button>
+        `;
+        container.appendChild(div);
     });
-  }
 
-  function openLoginScreen(index) {
-    selectedUserIndex = index;
-    const acc = accounts[index];
-    loginUserImage.src = acc.image;
-    loginUserName.textContent = acc.name;
-    loginPasswordInput.value = "";
-    loginErrorMessage.textContent = "";
-    loginPasswordInput.focus();
+    document.getElementById("addAccountBlock").style.display =
+        accounts.length >= maxAccounts ? "none" : "inline-block";
+}
 
-    title.style.display = "none";
-    usersList.style.display = "none";
-    btnGuest.style.display = "none";
+document.getElementById("addAccountBlock").onclick = () => {
+    if (accounts.length < maxAccounts)
+        document.getElementById("registerForm").style.display = "block";
+};
 
-    loginPasswordScreen.classList.add("active");
-  }
+function createAccount() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const imageInput = document.getElementById("imageInput");
 
-  btnLoginConfirm.onclick = () => {
-    if (selectedUserIndex === null) return;
-    const inputPass = loginPasswordInput.value.trim();
-    if (inputPass === accounts[selectedUserIndex].pass) {
-      alert(`Bienvenido ${accounts[selectedUserIndex].name}!`);
-    } else {
-      loginErrorMessage.textContent = "Contraseña incorrecta.";
-      loginPasswordInput.value = "";
-      loginPasswordInput.focus();
+    if (!username || !password) {
+        alert("Completa todos los campos.");
+        return;
     }
-  };
 
-  btnBackToUsers.onclick = () => {
-    loginPasswordScreen.classList.remove("active");
-    title.style.display = "block";
-    usersList.style.display = "block";
-    btnGuest.style.display = "inline-block";
-    loginErrorMessage.textContent = "";
-    loginPasswordInput.value = "";
-    selectedUserIndex = null;
-  };
+    if (accounts.some(acc => acc.username.toLowerCase() === username.toLowerCase())) {
+        alert("Ese nombre ya está en uso.");
+        return;
+    }
 
-  btnGuest.onclick = () => {
-    alert("Entrando como Invitado...");
-  };
+    if (password !== confirmPassword) {
+        alert("Las contraseñas no coinciden.");
+        return;
+    }
 
-  renderUsers();
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        accounts.push({
+            username,
+            password,
+            image: e.target.result
+        });
+
+        saveAccounts();
+        renderProfiles();
+        document.getElementById("registerForm").style.display = "none";
+    };
+
+    if (imageInput.files[0]) {
+        reader.readAsDataURL(imageInput.files[0]);
+    } else {
+        alert("Selecciona una imagen.");
+    }
+}
+
+function login(index) {
+    const inputPassword = prompt("Introduce la contraseña:");
+    if (inputPassword === accounts[index].password) {
+        alert("Bienvenido " + accounts[index].username);
+    } else {
+        alert("Contraseña incorrecta.");
+    }
+}
+
+function deleteAccount(index) {
+    if (confirm("¿Eliminar esta cuenta?")) {
+        accounts.splice(index, 1);
+        saveAccounts();
+        renderProfiles();
+    }
+}
+
+renderProfiles();
 </script>
 
 </body>
