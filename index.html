@@ -3,41 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Retro</title>
+<title>Selector Retro</title>
 
 <!-- Fuente pixel estilo Undertale -->
 <link href="https://fonts.cdnfonts.com/css/determination-mono" rel="stylesheet">
 
 <style>
 body {
-    background: black;
-    color: #00ff99;
-    font-family: 'Determination Mono', monospace;
-    text-align: center;
     margin: 0;
+    background: black;
+    font-family: 'Determination Mono', monospace;
+    color: #00ff99;
 }
 
 h1 {
+    text-align: center;
     margin-top: 20px;
-    font-size: 40px;
+    font-size: 36px;
 }
 
-.container {
+#profileSelector {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     margin-top: 30px;
+    gap: 20px;
 }
 
 .profile {
     border: 2px solid #00ff99;
     padding: 10px;
-    margin: 10px;
-    display: inline-block;
-    width: 180px;
+    width: 150px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     cursor: pointer;
-    transition: 0.3s;
+    background: #000000;
+    transition: 0.2s;
 }
 
 .profile:hover {
     background: #003322;
+    transform: scale(1.05);
 }
 
 .profile img {
@@ -45,6 +54,12 @@ h1 {
     height: 100px;
     object-fit: cover;
     border: 2px solid #00ff99;
+    margin-top: 10px;
+}
+
+.profile p {
+    margin: 5px 0;
+    word-break: break-word;
 }
 
 button {
@@ -52,9 +67,8 @@ button {
     background: black;
     color: #00ff99;
     border: 2px solid #00ff99;
-    padding: 8px;
+    padding: 5px 10px;
     cursor: pointer;
-    margin-top: 5px;
 }
 
 button:hover {
@@ -62,86 +76,86 @@ button:hover {
     color: black;
 }
 
-input {
-    font-family: 'Determination Mono', monospace;
+#registerForm {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#registerForm input {
+    display: block;
+    margin: 10px auto;
+    padding: 5px;
     background: black;
     color: #00ff99;
     border: 2px solid #00ff99;
-    padding: 5px;
-    margin: 5px;
-}
-
-.form-container {
-    display: none;
-    margin-top: 20px;
-}
-
-.hidden {
-    display: none;
 }
 </style>
 </head>
-
 <body>
 
-<h1>TERMINAL 1999</h1>
+<h1>SELECCIONA PERFIL</h1>
 
-<div class="container" id="profiles">
-</div>
+<div id="profileSelector"></div>
 
-<div id="addAccountBlock" class="profile">
-    <p>+ AÑADIR CUENTA</p>
-</div>
-
-<div class="form-container" id="registerForm">
+<div id="registerForm">
     <h2>CREAR CUENTA</h2>
-    <input type="text" id="username" placeholder="Usuario"><br>
-    <input type="file" id="imageInput" accept="image/*"><br>
-    <input type="password" id="password" placeholder="Contraseña"><br>
-    <input type="password" id="confirmPassword" placeholder="Confirmar contraseña"><br>
-    <button onclick="createAccount()">CREAR</button>
+    <input type="text" id="username" placeholder="Nombre de usuario">
+    <input type="password" id="password" placeholder="Contraseña">
+    <input type="password" id="confirmPassword" placeholder="Confirmar contraseña">
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="createAccount()">Crear Cuenta</button>
 </div>
 
 <script>
-let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+// ------------------ CONFIG ------------------
 const maxAccounts = 3;
+const guestImage = "https://i.imgur.com/7Y2nZ6k.png"; // Cambia aquí la imagen del invitado
+let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 
+// ------------------ FUNCIONES ------------------
 function saveAccounts() {
     localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
 function renderProfiles() {
-    const container = document.getElementById("profiles");
+    const container = document.getElementById("profileSelector");
     container.innerHTML = "";
 
-    // Invitado
-    const guest = document.createElement("div");
-    guest.className = "profile";
-    guest.innerHTML = "<p>INVITADO</p>";
-    guest.onclick = () => alert("Entrando como Invitado...");
-    container.appendChild(guest);
+    // Perfil invitado
+    const guestDiv = document.createElement("div");
+    guestDiv.className = "profile";
+    guestDiv.innerHTML = `
+        <img src="${guestImage}">
+        <p>INVITADO</p>
+    `;
+    guestDiv.onclick = () => alert("Entrando como Invitado...");
+    container.appendChild(guestDiv);
 
+    // Perfiles existentes
     accounts.forEach((acc, index) => {
-        const div = document.createElement("div");
-        div.className = "profile";
-        div.innerHTML = `
+        const accDiv = document.createElement("div");
+        accDiv.className = "profile";
+        accDiv.innerHTML = `
             <img src="${acc.image}">
             <p>${acc.username}</p>
-            <button onclick="login(${index}); event.stopPropagation();">INGRESAR</button>
-            <button onclick="deleteAccount(${index}); event.stopPropagation();">ELIMINAR</button>
+            <button onclick="login(${index}); event.stopPropagation();">Ingresar</button>
+            <button onclick="deleteAccount(${index}); event.stopPropagation();">Eliminar</button>
         `;
-        container.appendChild(div);
+        container.appendChild(accDiv);
     });
 
-    document.getElementById("addAccountBlock").style.display =
-        accounts.length >= maxAccounts ? "none" : "inline-block";
+    // Botón añadir cuenta
+    if (accounts.length < maxAccounts) {
+        const addDiv = document.createElement("div");
+        addDiv.className = "profile";
+        addDiv.innerHTML = `<p>+ AÑADIR CUENTA</p>`;
+        addDiv.onclick = () => document.getElementById("registerForm").style.display = "block";
+        container.appendChild(addDiv);
+    }
 }
 
-document.getElementById("addAccountBlock").onclick = () => {
-    if (accounts.length < maxAccounts)
-        document.getElementById("registerForm").style.display = "block";
-};
-
+// Crear cuenta
 function createAccount() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
@@ -163,6 +177,11 @@ function createAccount() {
         return;
     }
 
+    if (!imageInput.files[0]) {
+        alert("Selecciona una imagen.");
+        return;
+    }
+
     const reader = new FileReader();
     reader.onload = function(e) {
         accounts.push({
@@ -170,28 +189,28 @@ function createAccount() {
             password,
             image: e.target.result
         });
-
         saveAccounts();
         renderProfiles();
         document.getElementById("registerForm").style.display = "none";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("confirmPassword").value = "";
+        document.getElementById("imageInput").value = "";
     };
-
-    if (imageInput.files[0]) {
-        reader.readAsDataURL(imageInput.files[0]);
-    } else {
-        alert("Selecciona una imagen.");
-    }
+    reader.readAsDataURL(imageInput.files[0]);
 }
 
+// Login
 function login(index) {
-    const inputPassword = prompt("Introduce la contraseña:");
-    if (inputPassword === accounts[index].password) {
+    const inputPass = prompt("Introduce la contraseña:");
+    if (inputPass === accounts[index].password) {
         alert("Bienvenido " + accounts[index].username);
     } else {
         alert("Contraseña incorrecta.");
     }
 }
 
+// Eliminar cuenta
 function deleteAccount(index) {
     if (confirm("¿Eliminar esta cuenta?")) {
         accounts.splice(index, 1);
@@ -200,6 +219,7 @@ function deleteAccount(index) {
     }
 }
 
+// Render inicial
 renderProfiles();
 </script>
 
